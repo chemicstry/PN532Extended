@@ -16,7 +16,8 @@ ByteBuffer& operator>>(ByteBuffer& a, TargetDataTypeA& b)
 
     uint8_t ATSLen = 0;
     a >> ATSLen;
-    b.ATS = a.ReadBinary(ATSLen-1); // ATS len includes "ATSLen" byte
+    if (ATSLen > 1)
+        b.ATS = a.ReadBinary(ATSLen-1); // ATS len includes "ATSLen" byte
 
     return a;
 }
