@@ -62,10 +62,10 @@ int16_t PN532Extended::ReadResponse(BinaryData& packet, uint16_t timeout)
     return status;
 }
 
-// Creates external card interface for communications
-CardInterface PN532Extended::CreateCardInterface(uint8_t tg)
+// Creates external tag interface for communications
+TagInterface PN532Extended::CreateTagInterface(uint8_t tg)
 {
-    return CardInterface(
+    return TagInterface(
         [tg, this](const BinaryData& packet) {
             // Build data exchange packet
             ByteBuffer buf;

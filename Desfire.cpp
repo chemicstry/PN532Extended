@@ -21,7 +21,7 @@ ByteBuffer& operator>>(ByteBuffer& a, ISO7816_4_RAPDU& b)
     a >> b.SW2;
 }
 
-Desfire::Desfire(CardInterface& interface) : _interface(interface), _authenticatedKeyNo(-1), _selectedApplication(0)
+Desfire::Desfire(TagInterface& interface) : _interface(interface), _authenticatedKeyNo(-1), _selectedApplication(0)
 {
 
 }

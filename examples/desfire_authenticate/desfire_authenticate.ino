@@ -102,9 +102,9 @@ void loop() {
 
     if (type == CARD_TYPE_MIFARE_DESFIRE)
     {
-      // Creates a direct card interface for Desfire library
-      CardInterface cif = nfcext.CreateCardInterface(tgdata.Tg);
-      Desfire desfire(cif);
+      // Creates a direct tag interface for Desfire library
+      TagInterface tif = nfcext.CreateTagInterface(tgdata.Tg);
+      Desfire desfire(tif);
 
       // Connects card with ISO7816 standard.
       // Desfire EV1 cards work without this, but ISO standards require it.

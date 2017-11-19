@@ -1,7 +1,7 @@
 #ifndef __DESFIRE_H__
 #define __DESFIRE_H__
 
-#include "CardInterface.h"
+#include "TagInterface.h"
 #include "ByteBuffer.h"
 #include "DesfireKey.h"
 
@@ -127,7 +127,7 @@ inline void desfire_crc32_byte(uint32_t *crc, const uint8_t value)
 class Desfire
 {
 public:
-    Desfire(CardInterface& interface);
+    Desfire(TagInterface& interface);
 
     bool Connect();
     bool Transceive(const DesfireInstruction_t ins, const BinaryData& in, BinaryData& out);
@@ -150,7 +150,7 @@ private:
     DesfireKey _sessionKey; // Gets assigned after successful authentication
     BinaryData _sessionKeyIV;
     DesfireStatus_t _lastError;
-    CardInterface& _interface;
+    TagInterface& _interface;
 };
 
 #endif

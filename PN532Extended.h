@@ -4,7 +4,7 @@
 #include <cstdint>
 #include "PN532Interface.h"
 #include "PN532Packets.h"
-#include "CardInterface.h"
+#include "TagInterface.h"
 
 #define PN532EXTENDED_DEBUG 0
 
@@ -34,7 +34,7 @@ public:
     int16_t WriteCommand(const BinaryData& packet);
     int16_t ReadResponse(BinaryData& packet, uint16_t timeout = PN532_DEFAULT_TIMEOUT);
 
-    CardInterface CreateCardInterface(uint8_t tg);
+    TagInterface CreateTagInterface(uint8_t tg);
 
     InListPassiveTargetResponse InListPassiveTarget(uint8_t maxTargets = 1, BrTy_t brty = BRTY_106KBPS_TYPE_A);
 
