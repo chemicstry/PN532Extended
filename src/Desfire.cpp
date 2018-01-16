@@ -12,6 +12,8 @@ ByteBuffer& operator<<(ByteBuffer& a, const ISO7816_4_CAPDU& b)
     a << b.Lc;
     a << b.Data;
     a << b.Le;
+
+    return a;
 }
 
 ByteBuffer& operator>>(ByteBuffer& a, ISO7816_4_RAPDU& b)
@@ -19,9 +21,11 @@ ByteBuffer& operator>>(ByteBuffer& a, ISO7816_4_RAPDU& b)
     b.Data = a.ReadBinary(a.RemainingSize()-2);
     a >> b.SW1;
     a >> b.SW2;
+
+    return a;
 }
 
-Desfire::Desfire(TagInterface& interface) : _interface(interface), _authenticatedKeyNo(-1), _selectedApplication(0)
+Desfire::Desfire(TagInterface& interface) : _selectedApplication(0), _authenticatedKeyNo(-1), _interface(interface)
 {
 
 }
