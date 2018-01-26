@@ -1,8 +1,6 @@
 #include "PN532Extended.h"
 #include "Utils.h"
 
-#include "PN532.h"
-
 CardType_t PN532Extended::IdentifyTypeACard(const TargetDataTypeA& tgdata)
 {
     if (tgdata.SAK == 0x09 && tgdata.ATQA[0] == 0x00 && tgdata.ATQA[1] == 0x04)
@@ -80,6 +78,76 @@ TagInterface PN532Extended::CreateTagInterface(uint8_t tg)
             return status; 
         }
     );
+}
+
+bool PN532Extended::GetFirmwareVersion(GetFirmwareVersionResponse& resp)
+{
+    // Serialize request
+    ByteBuffer buf;
+    buf << COMMAND_GETFIRMWAREVERSION;
+
+    if (WriteCommand(buf.Data()))
+        return false;
+
+    // Reuse request buffer for response
+    buf.Clear();
+
+    if (ReadResponse(buf.Data()) < 0)
+        return false;
+
+    // Deserialize data
+    buf >> resp;
+
+    return true;
+}
+
+bool PN532Extended::SAMConfig(SAMModes mode, uint8_t timeout, uint8_t IRQ)
+{
+    SAMConfiguration req;
+    req.Mode = mode;
+    req.Timeout = timeout;
+    req.IRQ = IRQ;
+
+    // Serialize request
+    ByteBuffer buf;
+    buf << COMMAND_SAMCONFIGURATION;
+    buf << req;
+
+    if (WriteCommand(buf.Data()))
+        return false;
+
+    // Reuse request buffer for response
+    buf.Clear();
+
+    if (ReadResponse(buf.Data()) < 0)
+        return false;
+
+    return true;
+}
+
+bool PN532Extended::SetPassiveActivationRetries(uint8_t maxRetries)
+{
+    // Max retries options
+    RFConfiguration_MaxRetries req;
+    req.MxRtyATR = 0xFF;
+    req.MxRtyPSL = 0x01;
+    req.MxRtyPassiveActivation = maxRetries;
+
+    // Serialize request
+    ByteBuffer buf;
+    buf << COMMAND_GETFIRMWAREVERSION;
+    buf << req;
+
+    if (WriteCommand(buf.Data()))
+        return false;
+
+    // Reuse request buffer for response
+    buf.Clear();
+
+    if (ReadResponse(buf.Data()) < 0)
+        return false;
+
+    return true;
 }
 
 InListPassiveTargetResponse PN532Extended::InListPassiveTarget(uint8_t maxTargets, BrTy_t brty)

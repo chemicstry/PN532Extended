@@ -2,6 +2,36 @@
 
 using namespace PN532Packets;
 
+ByteBuffer& operator>>(ByteBuffer& a, GetFirmwareVersionResponse& b)
+{
+    a >> b.IC;
+    a >> b.Ver;
+    a >> b.Rev;
+    a >> (uint8_t&)(b.Support);
+
+    return a;
+}
+
+ByteBuffer& operator<<(ByteBuffer& a, const SAMConfiguration& b)
+{
+    a << b.Mode;
+    a << b.Timeout;
+    a << b.IRQ;
+
+    return a;
+}
+
+ByteBuffer& operator<<(ByteBuffer& a, const RFConfiguration_MaxRetries& b)
+{
+    a << (uint8_t)0x05; // Max Retries Cfg
+
+    a << b.MxRtyATR;
+    a << b.MxRtyPSL;
+    a << b.MxRtyPassiveActivation;
+
+    return a;
+}
+
 ByteBuffer& operator>>(ByteBuffer& a, TargetDataTypeA& b)
 {
     a >> b.Tg;

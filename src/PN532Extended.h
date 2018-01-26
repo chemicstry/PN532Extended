@@ -35,6 +35,9 @@ public:
     int16_t ReadResponse(BinaryData& packet, uint16_t timeout = PN532_DEFAULT_TIMEOUT);
 
     TagInterface CreateTagInterface(uint8_t tg);
+    bool SetPassiveActivationRetries(uint8_t maxRetries);
+    bool SAMConfig(SAMModes mode = SAM_MODE_NORMAL, uint8_t timeout = 20, uint8_t IRQ = 0x01);
+    bool GetFirmwareVersion(GetFirmwareVersionResponse& resp);
 
     InListPassiveTargetResponse InListPassiveTarget(uint8_t maxTargets = 1, BrTy_t brty = BRTY_106KBPS_TYPE_A);
 

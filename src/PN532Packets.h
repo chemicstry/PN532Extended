@@ -9,8 +9,46 @@ namespace PN532Packets
 {
     enum Commands : uint8_t
     {
+        COMMAND_GETFIRMWAREVERSION      = 0x02,
+        COMMAND_SAMCONFIGURATION        = 0x14,
+        COMMAND_RFCONFIGURATION         = 0x32,
         COMMAND_INDATAEXCHANGE          = 0x40,
         COMMAND_INLISTPASSIVETARGET     = 0x4A
+    };
+
+    struct GetFirmwareVersionResponse
+    {
+        uint8_t IC;     // IC version (PN532 is 0x32)
+        uint8_t Ver;    // Firmware version
+        uint8_t Rev;    // Firmware revision
+        struct Support_t {
+            uint8_t ISO14443_TYPEA  : 1;
+            uint8_t ISO14443_TYPEB  : 1;
+            uint8_t ISO18092        : 1;
+            uint8_t RFU             : 5;
+        } Support;      // Supported functionalities
+    };
+
+    enum SAMModes : uint8_t
+    {
+        SAM_MODE_NORMAL         = 0x01, // the SAM is not used; this is the default mode
+        SAM_MODE_VIRTUAL_CARD   = 0x02, // the couple PN532+SAM is seen as only one contactless SAM card from the external world
+        SAM_MODE_WIRED_CARD     = 0x03, // the host controller can access to the SAM with standard PCD commands (InListPassiveTarget, InDataExchange, …)
+        SAM_MODE_DUAL_CARD      = 0x04  // both the PN532 and the SAM are visible from the external world as two separated targets.
+    };
+
+    struct SAMConfiguration
+    {
+        SAMModes Mode;
+        uint8_t Timeout;
+        uint8_t IRQ;
+    };
+
+    struct RFConfiguration_MaxRetries
+    {
+        uint8_t MxRtyATR;
+        uint8_t MxRtyPSL;
+        uint8_t MxRtyPassiveActivation;
     };
 
     enum BrTy_t : uint8_t // Baud rate and modulation type
@@ -46,6 +84,9 @@ namespace PN532Packets
 
 }
 
+ByteBuffer& operator>>(ByteBuffer& a, PN532Packets::GetFirmwareVersionResponse& b);
+ByteBuffer& operator<<(ByteBuffer& a, const PN532Packets::SAMConfiguration& b);
+ByteBuffer& operator<<(ByteBuffer& a, const PN532Packets::RFConfiguration_MaxRetries& b);
 ByteBuffer& operator>>(ByteBuffer& a, PN532Packets::TargetDataTypeA& b);
 ByteBuffer& operator<<(ByteBuffer& a, const PN532Packets::InListPassiveTargetRequest& b);
 ByteBuffer& operator>>(ByteBuffer& a, PN532Packets::InListPassiveTargetResponse& b);

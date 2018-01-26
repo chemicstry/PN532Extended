@@ -1,6 +1,5 @@
-#include <PN532_HSU.h>
-#include <PN532.h>
 #include <PN532Extended.h>
+#include <PN532_HSU.h>
 #include <Desfire.h>
 
 // Use Serial2 of ESP32
@@ -9,11 +8,8 @@ HardwareSerial PN532Serial(2);
 // Serial interface
 PN532_HSU pn532hsu(PN532Serial);
 
-// Original PN532 library for initialization
-PN532 nfc(pn532hsu);
-
 // Extended library which allows card extensions
-PN532Extended nfcext(pn532hsu);
+PN532Extended nfc(pn532hsu);
 
 // Maximum RFID targets to be detected at once (PN532 limit is 2)
 #define MAX_RFID_TARGETS 1
@@ -31,21 +27,24 @@ void setup() {
 
   nfc.begin();
 
-  uint32_t versiondata = nfc.getFirmwareVersion();
-  if (! versiondata) {
+  GetFirmwareVersionResponse version;
+  if (!nfc.GetFirmwareVersion(version)) {
     Serial.print("Didn't find PN53x board");
     while (1); // halt
   }
   
   // Got ok data, print it out!
-  Serial.print("Found chip PN5"); Serial.println((versiondata>>24) & 0xFF, HEX); 
-  Serial.print("Firmware ver. "); Serial.print((versiondata>>16) & 0xFF, DEC); 
-  Serial.print('.'); Serial.println((versiondata>>8) & 0xFF, DEC);
+  Serial.print("Found chip PN5"); Serial.println(version.IC, HEX);
+  Serial.print("Firmware version: "); Serial.println(version.Ver, DEC);
+  Serial.print("Firmware revision: "); Serial.println(version.Rev, DEC);
+  Serial.print("Supports ISO18092: "); Serial.println((bool)version.Support.ISO18092);
+  Serial.print("Supports ISO14443 Type A: "); Serial.println((bool)version.Support.ISO14443_TYPEA);
+  Serial.print("Supports ISO14443 Type B: "); Serial.println((bool)version.Support.ISO14443_TYPEB);
   
   // Set the max number of retry attempts to read from a card
   // This prevents us from waiting forever for a card, which is
   // the default behaviour of the PN532.
-  nfc.setPassiveActivationRetries(0xFF);
+  nfc.SetPassiveActivationRetries(0xFF);
   
   // configure board to read RFID tags
   nfc.SAMConfig();
@@ -66,7 +65,7 @@ void PrintBin(const BinaryData& in)
 
 void loop() {
   // Finds nearby ISO14443 Type A tags
-  InListPassiveTargetResponse resp = nfcext.InListPassiveTarget(1, BRTY_106KBPS_TYPE_A);
+  InListPassiveTargetResponse resp = nfc.InListPassiveTarget(1, BRTY_106KBPS_TYPE_A);
 
   // For parsing response data
   ByteBuffer buf(resp.TgData);
@@ -103,7 +102,7 @@ void loop() {
     if (type == CARD_TYPE_MIFARE_DESFIRE)
     {
       // Creates a direct tag interface for Desfire library
-      TagInterface tif = nfcext.CreateTagInterface(tgdata.Tg);
+      TagInterface tif = nfc.CreateTagInterface(tgdata.Tg);
       Desfire desfire(tif);
 
       // Connects card with ISO7816 standard.
