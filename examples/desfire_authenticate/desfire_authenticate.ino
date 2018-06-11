@@ -65,7 +65,8 @@ void PrintBin(const BinaryData& in)
 
 void loop() {
   // Finds nearby ISO14443 Type A tags
-  InListPassiveTargetResponse resp = nfc.InListPassiveTarget(1, BRTY_106KBPS_TYPE_A);
+  InListPassiveTargetResponse resp;
+  nfc.InListPassiveTarget(resp, 1, BRTY_106KBPS_TYPE_A);
 
   // For parsing response data
   ByteBuffer buf(resp.TgData);

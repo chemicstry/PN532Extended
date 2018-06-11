@@ -150,10 +150,9 @@ bool PN532Extended::SetPassiveActivationRetries(uint8_t maxRetries)
     return true;
 }
 
-InListPassiveTargetResponse PN532Extended::InListPassiveTarget(uint8_t maxTargets, BrTy_t brty)
+bool PN532Extended::InListPassiveTarget(InListPassiveTargetResponse &resp, uint8_t maxTargets, BrTy_t brty)
 {
     // Initialise response struct
-    InListPassiveTargetResponse resp;
     resp.NbTg = 0;
 
     // Initialise request struct
@@ -167,16 +166,16 @@ InListPassiveTargetResponse PN532Extended::InListPassiveTarget(uint8_t maxTarget
     buf << req;
     
     if (WriteCommand(buf.Data()))
-        return resp; // Return empty response if failed
+        return false;
 
     // Reuse request buffer for response
     buf.Clear();
 
     if (ReadResponse(buf.Data()) < 0)
-        return resp; // Return empty response if failed
+        return false;
 
     // Deserialize data
     buf >> resp;
 
-    return resp;
+    return true;
 }
