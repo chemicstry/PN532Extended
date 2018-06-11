@@ -135,7 +135,7 @@ bool PN532Extended::SetPassiveActivationRetries(uint8_t maxRetries)
 
     // Serialize request
     ByteBuffer buf;
-    buf << COMMAND_GETFIRMWAREVERSION;
+    buf << COMMAND_RFCONFIGURATION;
     buf << req;
 
     if (WriteCommand(buf.Data()))
