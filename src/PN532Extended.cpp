@@ -25,7 +25,6 @@ PN532Extended::PN532Extended(PN532Interface& interface): _interface(interface)
 void PN532Extended::begin()
 {
     // Initialize HAL
-    _interface.begin();
     _interface.wakeup();
 }
 

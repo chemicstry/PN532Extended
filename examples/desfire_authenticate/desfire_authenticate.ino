@@ -25,6 +25,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Hello!");
 
+  pn532hsu.begin();
   nfc.begin();
 
   GetFirmwareVersionResponse version;
