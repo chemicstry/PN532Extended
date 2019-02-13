@@ -68,3 +68,18 @@ ByteBuffer& operator>>(ByteBuffer& a, InListPassiveTargetResponse& b)
 
     return a;
 }
+
+ByteBuffer& operator<<(ByteBuffer& a, const InReleaseRequest& b)
+{
+    a << b.Tg;
+
+    return a;
+}
+
+ByteBuffer& operator>>(ByteBuffer& a, InReleaseResponse& b)
+{
+    a >> b.Status;
+
+    return a;
+}
+

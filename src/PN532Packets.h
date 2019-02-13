@@ -13,7 +13,8 @@ namespace PN532Packets
         COMMAND_SAMCONFIGURATION        = 0x14,
         COMMAND_RFCONFIGURATION         = 0x32,
         COMMAND_INDATAEXCHANGE          = 0x40,
-        COMMAND_INLISTPASSIVETARGET     = 0x4A
+        COMMAND_INLISTPASSIVETARGET     = 0x4A,
+        COMMAND_INRELEASE               = 0x52
     };
 
     struct GetFirmwareVersionResponse
@@ -82,6 +83,15 @@ namespace PN532Packets
         BinaryData TgData; // Target Data
     };
 
+    struct InReleaseRequest
+    {
+        uint8_t Tg;
+    };
+
+    struct InReleaseResponse
+    {
+        uint8_t Status;
+    };
 }
 
 ByteBuffer& operator>>(ByteBuffer& a, PN532Packets::GetFirmwareVersionResponse& b);
@@ -90,5 +100,7 @@ ByteBuffer& operator<<(ByteBuffer& a, const PN532Packets::RFConfiguration_MaxRet
 ByteBuffer& operator>>(ByteBuffer& a, PN532Packets::TargetDataTypeA& b);
 ByteBuffer& operator<<(ByteBuffer& a, const PN532Packets::InListPassiveTargetRequest& b);
 ByteBuffer& operator>>(ByteBuffer& a, PN532Packets::InListPassiveTargetResponse& b);
+ByteBuffer& operator<<(ByteBuffer& a, const PN532Packets::InReleaseRequest& b);
+ByteBuffer& operator>>(ByteBuffer& a, PN532Packets::InReleaseResponse& b);
 
 #endif

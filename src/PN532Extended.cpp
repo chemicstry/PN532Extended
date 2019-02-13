@@ -178,3 +178,29 @@ bool PN532Extended::InListPassiveTarget(InListPassiveTargetResponse &resp, uint8
 
     return true;
 }
+
+uint8_t PN532Extended::InRelease(uint8_t tg)
+{
+    InReleaseRequest req;
+    req.Tg = tg;
+
+    InReleaseResponse resp;
+
+    ByteBuffer buf;
+    buf << COMMAND_INRELEASE;
+    buf << req;
+
+    if (WriteCommand(buf.Data()))
+        return false;
+
+    // Reuse request buffer for response
+    buf.Clear();
+
+    if (ReadResponse(buf.Data()) < 0)
+        return false;
+
+    // Deserialize data
+    buf >> resp;
+
+    return resp.Status;
+}

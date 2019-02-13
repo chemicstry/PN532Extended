@@ -39,6 +39,7 @@ public:
     bool SAMConfig(SAMModes mode = SAM_MODE_NORMAL, uint8_t timeout = 20, uint8_t IRQ = 0x01);
     bool GetFirmwareVersion(GetFirmwareVersionResponse& resp);
     bool InListPassiveTarget(InListPassiveTargetResponse& resp, uint8_t maxTargets = 1, BrTy_t brty = BRTY_106KBPS_TYPE_A);
+    uint8_t InRelease(uint8_t tg);
 
 private:
     PN532Interface& _interface;

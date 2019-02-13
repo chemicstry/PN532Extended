@@ -131,5 +131,9 @@ void loop() {
           Serial.println("ChangeKey FAILED!");
       }
     }
+
+    uint8_t status = nfc.InRelease(i);
+    Serial.print("Release status: ");
+    Serial.println(status);
   }
 }
