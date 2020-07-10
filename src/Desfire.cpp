@@ -119,9 +119,9 @@ DesfireInstruction_t Desfire::GetAuthCmd(const DesfireKeyType_t& type)
             return DFEV1_INS_AUTHENTICATE_ISO;
         case DF_KEY_AES:
             return DFEV1_INS_AUTHENTICATE_AES;
+        default:
+            return DF_INS_MAX;
     }
-
-    return DF_INS_MAX;
 }
 
 bool Desfire::Authenticate(const uint8_t keyno, const DesfireKey& key)
@@ -216,6 +216,8 @@ bool Desfire::ChangeKey(uint8_t keyno, const DesfireKey& key)
             case DF_KEY_AES:
                 keyno |= 0x80;
                 break;
+            default:
+                break;
         }
     }
 
@@ -306,8 +308,8 @@ DesfireKey Desfire::CreateSessionKey(const BinaryData& RndA, const BinaryData& R
             buf.Append(RndA.data()+12, 4);
             buf.Append(RndB.data()+12, 4);
             return CreateDesfireKeyAES(buf.Data());
+        default:
+            // Return DF_KEY_NONE
+            return DesfireKey();
     }
-
-    // Return DF_KEY_NONE
-    return DesfireKey();
 }

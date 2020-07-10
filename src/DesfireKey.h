@@ -27,6 +27,9 @@ struct DesfireKey
             case DF_KEY_3K3DES:
                 Key.resize(24);
                 break;
+            default:
+                Key.resize(0);
+                break;
         }
     }
 

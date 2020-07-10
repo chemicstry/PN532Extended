@@ -1,5 +1,14 @@
 #include "Crypto.h"
+
+#ifdef ESP32
+
+#include "esp_system.h"
+
+#if ESP_IDF_VERSION_MAJOR >= 4
+#include <esp32/aes.h>
+#else
 #include <hwcrypto/aes.h>
+#endif
 
 BinaryData AES_CBC_Decrypt(const BinaryData& data, const BinaryData& key, BinaryData& iv)
 {
@@ -46,3 +55,9 @@ BinaryData AES_CBC_Encrypt(const BinaryData& data, const BinaryData& key, Binary
 
     return out;
 }
+
+#else
+
+#warning "Crypto functions only implemented for ESP32"
+
+#endif
